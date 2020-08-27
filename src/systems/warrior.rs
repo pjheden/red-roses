@@ -1,4 +1,5 @@
 use amethyst::{
+    core::timing::Time,
     core::{Transform},
 	derive::SystemDesc,
 	ecs::{Join, System, SystemData, WriteStorage,
@@ -19,9 +20,10 @@ impl<'s> System<'s> for WarriorSystem {
 		WriteStorage<'s, Transform>,
 		ReadStorage<'s, Warrior>,
 		Read<'s, InputHandler<StringBindings>>,
+        Read<'s, Time>,
 	);
 
-	fn run(&mut self, (mut transforms, warriors, input): Self::SystemData) {
+	fn run(&mut self, (mut transforms, warriors, input, time): Self::SystemData) {
         for (warrior, transform) in (&warriors, &mut transforms).join() {
             let updown_movement = match warrior.player {
                 Player::First => input.axis_value("0_updown"),
@@ -31,20 +33,22 @@ impl<'s> System<'s> for WarriorSystem {
                 Player::First => input.axis_value("0_leftright"),
                 Player::Second => input.axis_value("1_leftright"),
             };
-            // TODO: make movement based on delta time
             if let (Some(ud_mv_amount), Some(lr_mv_amount)) = (updown_movement, leftright_movement) {
-                let ud_scaled_amount = 1.2 * ud_mv_amount as f32;
-                let lr_scaled_amount = 1.2 * lr_mv_amount as f32;
+                // TODO: set movement and rotatoin speed to a field of warrior
+                let m_speed = 70.0;
+                let ud_scaled_amount = m_speed * ud_mv_amount as f32;
+                let lr_scaled_amount = m_speed * lr_mv_amount as f32;
                 let movement_vector = Vector3::new(lr_scaled_amount, ud_scaled_amount, 0.0);
-                transform.prepend_translation(movement_vector);
+                transform.prepend_translation(movement_vector * time.delta_seconds());
 
                 
                 let (should_rotate, target_angle) = get_target_angle(movement_vector);
+                let r_speed = 10.0;
                 if should_rotate {
                     let rot = transform.rotation().angle();
                     // debug rotation
                     // println!("rot: {}, target: {}", rot, target_angle-rot);
-                    transform.prepend_rotation_z_axis(target_angle-rot);
+                    transform.prepend_rotation_z_axis((target_angle-rot) * r_speed * time.delta_seconds());
                 }
             }
 
