@@ -1,11 +1,11 @@
-# Repository for the open-source pinball game red-roses
+# Repository for the open-source game red-roses inspired by the Warlocks custom game from Warcraft III
 
 [![Software License][ico-license]](LICENSE.md)
 
 
 ## Structure
 
-The project is structured as following.
+The project is structured as following:
 
 ```
 assets/textures/        
@@ -30,7 +30,7 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) and [CODE_OF_CONDUCT](CODE_OF_CONDUCT
 
 ## Security
 
-If you discover any security related issues, please email pjheden@gmail.com instead of using the issue tracker.
+If you discover any security related issues, please email julianheden@gmail.com instead of using the issue tracker.
 
 ## Credits
 
