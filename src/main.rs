@@ -38,7 +38,9 @@ fn main() -> amethyst::Result<()> {
         )?
         .with_bundle(TransformBundle::new())?
         .with_bundle(input_bundle)?
-        .with(systems::WarriorSystem, "warrior_system", &["input_system"]);
+        .with(systems::ControlSystem, "control_system", &["input_system"])
+        .with(systems::CollisionSystem, "collision_system", &["control_system"])
+        .with(systems::WarriorSystem, "warrior_system", &["collision_system"]);
 
     let mut game = Application::new(assets_dir, GameState, game_data)?;
     game.run();

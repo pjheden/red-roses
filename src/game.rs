@@ -27,7 +27,7 @@ impl SimpleState for GameState {
     }
 }
 
-#[derive(PartialEq, Eq)]
+#[derive(PartialEq, Eq, Debug)]
 pub enum Player {
 	First,
 	Second,
@@ -35,12 +35,16 @@ pub enum Player {
 
 pub struct Warrior {
 	pub player: Player,
+	pub velocity: Vector3<f32>,
+	pub size: f32, 
 }
 
 impl Warrior {
 	fn new(player: Player) -> Warrior {
 		Warrior {
-			player,
+			player: player,
+			velocity: Vector3::new(0.0, 0.0, 0.0),
+			size: 50.0,
 		}
 	}
 }
