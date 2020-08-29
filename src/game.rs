@@ -111,7 +111,7 @@ fn load_sprite_sheet(world: &mut World) -> Handle<SpriteSheet> {
 		let loader = world.read_resource::<Loader>();
 		let texture_storage = world.read_resource::<AssetStorage<Texture>>();
 		loader.load(
-			"texture/warrior_spritesheet.png",
+			"texture/full_spritesheet.png",
 			ImageFormat::default(),
 			(),
 			&texture_storage,
@@ -120,7 +120,7 @@ fn load_sprite_sheet(world: &mut World) -> Handle<SpriteSheet> {
 	let loader = world.read_resource::<Loader>();
 	let sprite_sheet_store = world.read_resource::<AssetStorage<SpriteSheet>>();
     loader.load(
-        "texture/warrior_spritesheet.ron", // Here we load the associated ron file
+        "texture/full_spritesheet.ron", // Here we load the associated ron file
         SpriteSheetFormat(texture_handle),
         (),
         &sprite_sheet_store,
