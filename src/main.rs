@@ -7,13 +7,16 @@ use amethyst::{
     core::transform::TransformBundle,
     prelude::*,
     renderer::{
-        plugins::{RenderFlat2D, RenderToWindow},
+        plugins::{RenderDebugLines, RenderFlat2D, RenderToWindow},
         types::DefaultBackend,
         RenderingBundle,
     },
     utils::application_root_dir,
     input::{InputBundle, StringBindings},
 };
+
+const ARENA_HEIGHT: f32 = 100.0;
+const ARENA_WIDTH: f32 = 100.0;
 
 fn main() -> amethyst::Result<()> {
     amethyst::start_logger(Default::default());
@@ -34,13 +37,15 @@ fn main() -> amethyst::Result<()> {
                     RenderToWindow::from_config_path(display_config_path)?
                         .with_clear([0.34, 0.36, 0.52, 1.0]),
                 )
-                .with_plugin(RenderFlat2D::default()),
+                .with_plugin(RenderFlat2D::default())
+                .with_plugin(RenderDebugLines::default()),
         )?
         .with_bundle(TransformBundle::new())?
         .with_bundle(input_bundle)?
         .with(systems::ControlSystem, "control_system", &["input_system"])
         .with(systems::CollisionSystem, "collision_system", &["control_system"])
-        .with(systems::WarriorSystem, "warrior_system", &["collision_system"]);
+        .with(systems::WarriorSystem, "warrior_system", &["collision_system"])
+        .with(systems::ArenaSystem, "arena_system", &[]);
 
     let mut game = Application::new(assets_dir, GameState, game_data)?;
     game.run();
