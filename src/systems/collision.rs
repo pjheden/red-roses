@@ -1,13 +1,14 @@
 use amethyst::{
-    core::{Transform, SystemDesc},
+    core::{Transform},
     derive::SystemDesc,
-    ecs::{Join, ReadStorage, System, SystemData, World, WriteStorage},
+    ecs::{Join, ReadStorage, System, SystemData, WriteStorage},
 };
 
 use std::vec::Vec;
 
-use crate::game::{Warrior, Player, ARENA_WIDTH, ARENA_HEIGHT};
+use crate::game::{Warrior};
 
+#[derive(SystemDesc)]
 pub struct CollisionSystem;
 
 impl<'s> System<'s> for CollisionSystem {
@@ -17,7 +18,6 @@ impl<'s> System<'s> for CollisionSystem {
     );
 
     fn run(&mut self, (mut warriors, transforms): Self::SystemData) {
-        
         let mut colliding_warriors: std::vec::Vec<u8> = Vec::new();
         let mut ind: u8 = 0;
         for (warrior, transform) in (&warriors, &transforms).join() {
@@ -43,7 +43,7 @@ impl<'s> System<'s> for CollisionSystem {
         }
 
         ind = 0;
-        for (warrior, transform) in (&mut warriors, &transforms).join() {
+        for warrior in (&mut warriors).join() {
             for i in 0..colliding_warriors.len() {
                 if ind == colliding_warriors[i] {
                     // Set negative warrior velocity

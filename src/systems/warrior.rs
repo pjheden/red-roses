@@ -4,12 +4,11 @@ use amethyst::{
 	derive::SystemDesc,
 	ecs::{Join, System, SystemData, WriteStorage,
 		ReadStorage, Read},
-	input::{InputHandler, StringBindings},
 };
 use amethyst::core::math::{Vector3};
 use std::f32::consts::PI;
 
-use crate::game::{Warrior, Player};
+use crate::game::{Warrior};
 
 
 #[derive(SystemDesc)]
@@ -19,21 +18,19 @@ impl<'s> System<'s> for WarriorSystem {
 	type SystemData = (
 		WriteStorage<'s, Transform>,
 		ReadStorage<'s, Warrior>,
-		Read<'s, InputHandler<StringBindings>>,
         Read<'s, Time>,
 	);
 
-	fn run(&mut self, (mut transforms, warriors, input, time): Self::SystemData) {
+	fn run(&mut self, (mut transforms, warriors, time): Self::SystemData) {
         for (warrior, transform) in (&warriors, &mut transforms).join() {
             transform.prepend_translation(warrior.velocity * time.delta_seconds());
             let (should_rotate, target_angle) = get_target_angle(warrior.velocity);
-                let r_speed = 10.0;
-                if should_rotate {
-                    let rot = transform.rotation().angle();
-                    // debug rotation
-                    // println!("rot: {}, target: {}", rot, target_angle-rot);
-                    transform.prepend_rotation_z_axis((target_angle-rot) * r_speed * time.delta_seconds());
-                }
+            if should_rotate {
+                let rot = transform.rotation().angle();
+                // debug rotation
+                // println!("rot: {}, target: {}", rot, target_angle-rot);
+                transform.prepend_rotation_z_axis((target_angle-rot) * warrior.rotation_speed * time.delta_seconds());
+            }
         }
     }
 }
